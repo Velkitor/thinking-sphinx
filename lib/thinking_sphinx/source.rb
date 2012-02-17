@@ -20,8 +20,13 @@ module ThinkingSphinx
       @groupings    = []
       @options      = options
       @associations = {}
-      @database_configuration = @model.connection.
-        instance_variable_get(:@config).clone
+      begin
+        @database_configuration = @model.connection.
+          instance_variable_get(:@config).clone
+      rescue
+        @database_configuration = @model.connection.
+          instance_variable_get(:@master_connection).instance_variable_get(:@config).clone
+      end
 
       @base = join_dependency_class.new(
         @model, [], initial_joins

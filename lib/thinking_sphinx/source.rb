@@ -24,8 +24,13 @@ module ThinkingSphinx
         @database_configuration = @model.connection.
           instance_variable_get(:@config).clone
       rescue
-        @database_configuration = @model.connection.
-          instance_variable_get(:@master_connection).instance_variable_get(:@config).clone
+        begin
+          @database_configuration = @model.connection.
+            instance_variable_get(:@master_connection).instance_variable_get(:@config).clone
+        rescue
+          @database_configuration = @model.connection.instance_variable_get(:@master).
+            instance_variable_get(:@wrappers)[0].instance_variable_get(:@config)
+        end
       end
 
       @base = join_dependency_class.new(

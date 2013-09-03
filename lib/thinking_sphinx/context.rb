@@ -50,9 +50,11 @@ class ThinkingSphinx::Context
   # messy dependencies issues).
   #
   def load_models
+    puts "\n"*3+"="*80+"Load Models"
     ThinkingSphinx::Configuration.instance.model_directories.each do |base|
       Dir["#{base}**/*.rb"].each do |file|
-        model_name = file.gsub(/^#{base}([\w_\/\\]+)\.rb/, '\1').gsub(/Concerns::/,'')
+        model_name = file.gsub(/^#{base}([\w_\/\\]+)\.rb/, '\1').gsub(/concerns\//,'')
+        puts model_name
 
         next if model_name.nil?
         camelized_model = model_name.camelize
